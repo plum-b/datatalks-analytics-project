@@ -1,3 +1,7 @@
+# Secrets
+*.tfvars
+terraform.tfvars
+
 # Folders
 data
 secrets
