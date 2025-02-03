@@ -1,0 +1,14 @@
+# Initialize Terraform
+make infra-init
+
+# See execution plan
+make infra-plan
+
+# Apply changes
+make infra-apply
+
+# Destroy infrastructure
+make infra-destroy
+
+# Show help
+make help
