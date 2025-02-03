@@ -1,0 +1,7 @@
+credentials_file      = "path/to/cred.json"
+project_id            = "your-project-id"
+region                = "us-central1"
+bucket_raw_name       = "unique-raw-bucket-name"
+bucket_processed_name = "unique-processed-bucket-name"
+dataset_id            = "ny_taxi_data"
+service_account_id    = "dataproc-spark-sa"
