@@ -1,6 +1,8 @@
 # Secrets
 *.tfvars
-terraform.tfvars
+*.json
+.hcl
+.terraform
 
 # Folders
 data

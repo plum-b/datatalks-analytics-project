@@ -8,6 +8,7 @@ terraform {
 }
 
 provider "google" {
+  credentials = file("./setup/credentials.json")
   project = var.project_id
   region  = var.region
 }
@@ -49,19 +50,27 @@ resource "google_dataproc_cluster" "ny_taxi_processing" {
     master_config {
       num_instances = 1
       machine_type  = "n1-standard-2"
+      
+      disk_config {
+        boot_disk_size_gb = 200  # Reduce from default (500GB)
+      }
     }
 
     worker_config {
-      num_instances = 2  # Initial number of instances
+      num_instances = 2 # Initial number of instances
       machine_type  = "n1-standard-2"
+      
+      disk_config {
+        boot_disk_size_gb = 200  # Reduce from default (500GB)
+      }
     }
 
     autoscaling_config {
-      policy_uri = google_dataproc_autoscaling_policy.basic.self_link
+      policy_uri = google_dataproc_autoscaling_policy.basic.id
     }
 
     software_config {
-      image_version = "2.0"
+      image_version       = "2.0"
       optional_components = ["JUPYTER"]
     }
   }
@@ -69,26 +78,26 @@ resource "google_dataproc_cluster" "ny_taxi_processing" {
 
 # Autoscaling Policy (Updated)
 resource "google_dataproc_autoscaling_policy" "basic" {
-  policy_id = "ny-taxi-autoscaling"
-  location  = var.region
+  policy_id = "dataproc-policy"
+  location  = "us-central1"
 
   worker_config {
     min_instances = 2
-    max_instances = 10  # Correct attribute name
+    max_instances = 10 # Correct attribute name
   }
 
   basic_algorithm {
     yarn_config {
       graceful_decommission_timeout = "30s"
-      scale_up_factor   = 0.05
-      scale_down_factor = 0.05
+      scale_up_factor               = 0.05
+      scale_down_factor             = 0.05
     }
   }
 }
 
-resource "google_dataproc_autoscaling_policy" "basic" {
-  policy_id = "ny-taxi-autoscaling"
-  location  = var.region
+resource "google_dataproc_autoscaling_policy" "basic2" {
+  policy_id = "another-dataproc-policy"
+  location  = "us-east1"
 
   worker_config {
     min_instances = 2
@@ -98,8 +107,8 @@ resource "google_dataproc_autoscaling_policy" "basic" {
   basic_algorithm {
     yarn_config {
       graceful_decommission_timeout = "30s"
-      scale_up_factor   = 0.05
-      scale_down_factor = 0.05
+      scale_up_factor               = 0.05
+      scale_down_factor             = 0.05
     }
   }
 }
